@@ -3,9 +3,9 @@
 GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
 RUNNABLE_LINK=/usr/local/bin/grg
 
-read -r -p "Are you sure you want to remove? [y/N] " confirmation
-if [ "$confirmation" != y ] && [ "$confirmation" != Y ]; then
-    echo "Uninstall cancelled"
+read -r -p 'Are you sure you want to remove? [y/N] ' confirmation
+if [ "$confirmation" != 'y' ] && [ "$confirmation" != 'Y' ]; then
+    echo 'Uninstall cancelled'
     exit
 fi
 
