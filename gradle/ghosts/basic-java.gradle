@@ -1,0 +1,78 @@
+apply from: 'base.gradle'
+
+rootProject {
+    apply plugin: 'application'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.+'
+        annotationProcessor 'org.projectlombok:lombok:1.+'
+
+        implementation 'org.slf4j:slf4j-api:1.7.+'
+        implementation 'ch.qos.logback:logback-classic:1.2.+'
+
+        testCompileOnly 'org.projectlombok:lombok:1.+'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.+'
+
+        testImplementation platform('org.junit:junit-bom:5.+')
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+        testImplementation 'org.assertj:assertj-core:3.+'
+    }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    jar.manifest.attributes(
+        'Name': project.name,
+        'Implementation-Build-Date': buildTime,
+        'Implementation-Title': project.name,
+        'Implementation-Version': project.version,
+        'Implementation-Vendor': project.group ?: 'unspecified',
+        'Commit-AbbreviatedId': head?.abbreviatedId ?: 'unspecified',
+        'Commit-Id': head?.id ?: 'unspecified',
+        'Commit-Date': head?.getDate()?.toInstant() ?: 'unspecified',
+        'Source-Path': grgit.remote.list().findResult { it.name == 'origin' ? it.url : null } ?: 'unspecified',
+        'Created-By': "Gradle ${gradle.gradleVersion} with Gradle Ghost (grg)",
+        'Built-By': System.properties['user.name'],
+        'JDK': org.gradle.internal.jvm.Jvm.current(),
+        'OS': org.gradle.internal.os.OperatingSystem.current(),
+        'Class-Path': configurations.runtimeClasspath.collect { it.name }.join(' ')
+    )
+    jar.manifest.writeTo("$buildDir/manifest.mf")
+
+    test {
+        useJUnitPlatform()
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+
+        // Enable annotation processing (e.g.: for Lombok)
+        project.ipr.withXml { provider ->
+            provider.node.component
+                .find { it.@name == 'CompilerConfiguration' }
+                .annotationProcessing.replaceNode { annotationProcessing {profile(default: true, name: 'Default', enabled: true) } }
+        }
+    }
+
+    task cleanAll {
+        description = 'Deletes the build directory and the IDE files and directories'
+        group = 'build'
+        dependsOn clean, cleanIdea, cleanIdeaWorkspace
+        doLast {
+            delete 'out', '.idea'
+        }
+    }
+}

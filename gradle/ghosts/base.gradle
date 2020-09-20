@@ -1,0 +1,87 @@
+File ghostsDir = file('.')
+File templatesDir = file('../templates')
+
+gradle.ext.buildTime = new Date().toInstant()
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
+    }
+}
+
+rootProject {
+    if (file('.git').exists()) {
+        ext.grgit = org.ajoberstar.grgit.Grgit.open(dir: rootDir)
+    }
+    else {
+        println 'Git repository does not exsist, creating one...'
+        ext.grgit = org.ajoberstar.grgit.Grgit.init(dir: rootDir)
+    }
+
+    ext.head = grgit.head()
+    version = head?.abbreviatedId ? "${head.abbreviatedId}.${buildTime.toEpochMilli()}" : "${buildTime.toEpochMilli()}"
+
+    ['.gitignore', '.editorconfig', 'settings.gradle'].each { fileName ->
+        if (!file("$rootDir/$fileName").exists()) {
+            println "$fileName file does not exsist, creating one..."
+            copy {
+                from "$templatesDir/base"
+                include "${fileName}.template"
+                rename { fileName }
+                into rootDir
+            }
+        }
+    }
+
+    task showGhosts {
+        description = 'Displays all the Gradle Ghosts that you can use.'
+        group = 'help'
+        doLast {
+            ghostsDir.eachFile { println it.name.replace('.gradle', '') }
+        }
+    }
+
+    task showRepos {
+        description = 'Displays all the configured repositories.'
+        group = 'help'
+        doLast {
+            repositories.each { println "$it.name ('$it.url')" }
+        }
+    }
+
+    if (!file('gradle.lockfile').exists()) {
+        println 'gradle.lockfile does not exsist, creating one...'
+        gradle.startParameter.writeDependencyLocks = true
+
+        gradle.taskGraph.whenReady { taskGraph ->
+            configurations
+                .findAll { it.canBeResolved }
+                .each { it.resolve() }
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+
+    task resolveAndLockAll {
+        description = 'Resolves dependencies of all configurations and writes them into the lock file.'
+        doFirst {
+            assert gradle.startParameter.writeDependencyLocks : 'Execute resolveAndLockAll --write-locks'
+        }
+        doLast {
+            configurations
+                .findAll { it.canBeResolved }
+                .each { it.resolve() }
+        }
+    }
+}
