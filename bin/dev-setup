@@ -1,0 +1,8 @@
+#! /bin/bash
+
+GRADLE_GHOST_HOME=$1
+RUNNABLE_PATH=bin/grg
+RUNNABLE_LINK=/usr/local/bin/grg
+
+export GRADLE_GHOST_HOME
+ln -sf "$GRADLE_GHOST_HOME/$RUNNABLE_PATH" "$RUNNABLE_LINK"
