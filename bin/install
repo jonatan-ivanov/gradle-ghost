@@ -13,13 +13,13 @@
 #
 # You can tweak the install behavior by setting variables when running the script.
 # For example, to change the path to the installation directory:
-#   GRADLE_GHOST_HOME=~/.gg sh install
+#   GRADLE_GHOST_HOME=~/.gg; sh install
 #
 # Respects the following environment variables:
-#   GRADLE_GHOST_HOME   - path of the installation directory (default: $HOME/.gradle-ghost)
-#   REPO                - name of the GitHub repo to install from (default: jonatan-ivanov/gradle-ghost)
-#   REMOTE              - full remote URL of the git repo to install (default: GitHub via HTTPS)
-#   BRANCH              - branch to check out immediately after install (default: master)
+#   GRADLE_GHOST_HOME  - path of the installation directory (default: $HOME/.gradle-ghost)
+#   REPO               - name of the GitHub repo to install from (default: jonatan-ivanov/gradle-ghost)
+#   REMOTE             - full remote URL of the git repo to install (default: GitHub via HTTPS)
+#   BRANCH             - branch to check out immediately after install (default: master)
 
 set -e
 
@@ -75,6 +75,7 @@ git clone -c core.eol=lf -c core.autocrlf=false \
     exit 1
 }
 
+mkdir -p "$(dirname "$RUNNABLE_LINK")"
 ln -s "$GRADLE_GHOST_HOME/$RUNNABLE_PATH" "$RUNNABLE_LINK"
 echo "LAST_UPDATED=$(date +%s)" > "$LAST_UPDATED_FILE"
 
