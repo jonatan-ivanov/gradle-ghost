@@ -77,7 +77,9 @@ git clone -c core.eol=lf -c core.autocrlf=false \
 
 mkdir -p "$(dirname "$RUNNABLE_LINK")"
 ln -s "$GRADLE_GHOST_HOME/$RUNNABLE_PATH" "$RUNNABLE_LINK"
-echo "LAST_UPDATED=$(date +%s)" > "$LAST_UPDATED_FILE"
+NOW=$(date +%s)
+echo "LAST_UPDATED=$NOW" > "$LAST_UPDATED_FILE"
+echo "LAST_PROMPTED=$NOW" >> "$LAST_UPDATED_FILE"
 
 echo 'Installation completed.'
 echo "    Installation directory: $GRADLE_GHOST_HOME"

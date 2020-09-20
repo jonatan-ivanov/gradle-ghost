@@ -1,0 +1,40 @@
+#! /bin/bash
+
+set -e
+
+GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
+LAST_UPDATED_FILE=$GRADLE_GHOST_HOME/.last-updated
+
+UPDATE_THRESHOLD_DAYS=7
+PROMPT_THRESHOLD_DAYS=3
+NOW=$(date +%s)
+EPOCH_DAYS=$((NOW / 60 / 60 / 24))
+
+function update-ghost() {
+    read -r -p 'Do you want to update Gradle Ghost? [y/N] ' confirmation
+    if [ "$confirmation" != 'y' ] && [ "$confirmation" != 'Y' ]; then
+        echo "LAST_UPDATED=${LAST_UPDATED:-$NOW}" > "$LAST_UPDATED_FILE"
+        echo "LAST_PROMPTED=$NOW" >> "$LAST_UPDATED_FILE"
+    else
+        "$GRADLE_GHOST_HOME/bin/update"
+    fi
+}
+
+if [ -f "$LAST_UPDATED_FILE" ]; then
+    # shellcheck source=/dev/null
+    source "$LAST_UPDATED_FILE"
+    if [ -z "$LAST_UPDATED" ] || [ -z "$LAST_PROMPTED" ]; then
+        update-ghost
+    else
+        LAST_UPDATED_EPOCH_DAYS=$((LAST_UPDATED / 60 / 60 / 24))
+        LAST_PROMPTED_EPOCH_DAYS=$((LAST_PROMPTED / 60 / 60 / 24))
+        LAST_UPDATED_DAYS_DIFF=$((EPOCH_DAYS - LAST_UPDATED_EPOCH_DAYS))
+        LAST_PROMPTED_DAYS_DIFF=$((EPOCH_DAYS - LAST_PROMPTED_EPOCH_DAYS))
+
+        if [ $LAST_UPDATED_DAYS_DIFF -ge $UPDATE_THRESHOLD_DAYS ] && [ $LAST_PROMPTED_DAYS_DIFF -ge $PROMPT_THRESHOLD_DAYS ]; then
+            update-ghost
+        fi
+    fi
+else
+    update-ghost
+fi

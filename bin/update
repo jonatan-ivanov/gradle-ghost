@@ -12,7 +12,10 @@ error() {
 echo 'Updating Gradle Ghost...'
 if git -C "$GRADLE_GHOST_HOME" pull --rebase --stat origin master
 then
-    echo "LAST_UPDATED=$(date +%s)" > "$LAST_UPDATED_FILE"
+    NOW=$(date +%s)
+    echo "LAST_UPDATED=$NOW" > "$LAST_UPDATED_FILE"
+    echo "LAST_PROMPTED=$NOW" >> "$LAST_UPDATED_FILE"
+
     version=$(git -C "$GRADLE_GHOST_HOME" rev-parse --short HEAD)
     echo "Gradle Ghost has been updated and/or is at the current version: $version"
 else
