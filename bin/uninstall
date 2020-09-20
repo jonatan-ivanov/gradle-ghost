@@ -1,0 +1,20 @@
+#! /bin/bash
+
+read -r -p "Are you sure you want to remove? [y/N] " confirmation
+if [ "$confirmation" != y ] && [ "$confirmation" != Y ]; then
+    echo "Uninstall cancelled"
+    exit
+fi
+
+GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
+RUNNABLE_LINK=/usr/local/bin/grg
+
+echo "Removing $GRADLE_GHOST_HOME"
+if [ -d "$GRADLE_GHOST_HOME" ]; then
+    rm -rf "$GRADLE_GHOST_HOME"
+fi
+
+echo "Removing $RUNNABLE_LINK"
+rm -f "$RUNNABLE_LINK"
+
+echo 'Thanks for trying out Gradle Ghost. It has been uninstalled.'

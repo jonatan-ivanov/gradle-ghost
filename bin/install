@@ -1,0 +1,63 @@
+#! /bin/bash
+
+set -e
+
+GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
+REPO=${REPO:-jonatan-ivanov/gradle-ghost}
+REMOTE=${REMOTE:-https://github.com/${REPO}.git}
+BRANCH=${BRANCH:-master}
+
+RUNNABLE_PATH=bin/grg
+RUNNABLE_LINK=/usr/local/bin/grg
+LAST_UPDATED_FILE=$GRADLE_GHOST_HOME/.last-updated
+
+command_exists() {
+    command -v "$@" >/dev/null 2>&1
+}
+
+error() {
+    echo Error: "$@" >&2
+}
+
+if [ -d "$GRADLE_GHOST_HOME" ]; then
+    echo 'Gradle Ghost has been already installed.'
+    echo "You'll need to remove $GRADLE_GHOST_HOME if you want to re-install."
+    exit 0
+fi
+
+# Prevent the cloned repository from having insecure permissions. Failing to do
+# so causes compinit() calls to fail with "command not found: compdef" errors
+# for users with insecure umasks (e.g., "002", allowing group writability). Note
+# that this will be ignored under Cygwin by default, as Windows ACLs take
+# precedence over umasks except for filesystems mounted with option "noacl".
+umask g-w,o-w
+
+echo 'Cloning Gradle Ghost...'
+
+command_exists git || {
+    error "git is not installed"
+    exit 1
+}
+
+if [ "$OSTYPE" = cygwin ] && git --version | grep -q msysgit; then
+    error "Windows/MSYS Git is not supported on Cygwin"
+    error "Make sure the Cygwin git package is installed and is first on the \$PATH"
+    exit 1
+fi
+
+git clone -c core.eol=lf -c core.autocrlf=false \
+    -c fsck.zeroPaddedFilemode=ignore \
+    -c fetch.fsck.zeroPaddedFilemode=ignore \
+    -c receive.fsck.zeroPaddedFilemode=ignore \
+    --depth=1 --branch "$BRANCH" "$REMOTE" "$GRADLE_GHOST_HOME" || {
+    error "git clone failed"
+    exit 1
+}
+
+ln -s "$GRADLE_GHOST_HOME/$RUNNABLE_PATH" "$RUNNABLE_LINK"
+echo "LAST_UPDATED=$(date +%s)" > "$LAST_UPDATED_FILE"
+
+echo 'Installation completed.'
+echo "    Installation directory: $GRADLE_GHOST_HOME"
+echo "    Runnable link: $RUNNABLE_LINK"
+echo ''
