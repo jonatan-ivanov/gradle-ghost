@@ -1,0 +1,22 @@
+#! /bin/bash
+
+set -e
+
+GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
+LAST_UPDATED_FILE=$GRADLE_GHOST_HOME/.last-updated
+
+error() {
+    echo Error: "$@" >&2
+}
+
+echo 'Updating Gradle Ghost...'
+if git -C "$GRADLE_GHOST_HOME" pull --rebase --stat origin master
+then
+    echo "LAST_UPDATED=$(date +%s)" > "$LAST_UPDATED_FILE"
+    version=$(git -C "$GRADLE_GHOST_HOME" rev-parse --short HEAD)
+    echo "Gradle Ghost has been updated and/or is at the current version: $version"
+else
+    status=$?
+    error 'There was an error updating.'
+    exit $status
+fi
