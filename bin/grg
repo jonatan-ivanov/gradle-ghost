@@ -1,0 +1,3 @@
+#! /bin/bash
+
+"$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" --init-script "$GRADLE_GHOST_HOME/gradle/init.gradle" "$@"
