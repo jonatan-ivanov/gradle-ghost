@@ -1,0 +1,7 @@
+#! /bin/bash
+
+GRADLE_WRAPPER_VERSION=$(curl -s https://services.gradle.org/versions/current | jq '.version' --raw-output)
+
+echo "Updating gradle wrapper to $GRADLE_WRAPPER_VERSION"
+"$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" wrapper --gradle-version "$GRADLE_WRAPPER_VERSION" --project-dir "$GRADLE_GHOST_HOME/gradle-wrapper"
+rm -rf "$GRADLE_GHOST_HOME/gradle-wrapper/.gradle"
