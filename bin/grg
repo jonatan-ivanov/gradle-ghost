@@ -3,8 +3,9 @@
 GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
 
 if [ "$1" == '--version' ] || [ "$1" == '-v' ]; then
-    version=$(git -C "$GRADLE_GHOST_HOME" rev-parse --short HEAD)
-    echo "Gradle Ghost verion: $version"
+    GRADLE_GHOST_VERSION=$(git -C "$GRADLE_GHOST_HOME" rev-parse --short HEAD)
+    echo "Gradle Ghost verion: $GRADLE_GHOST_VERSION"
 fi
 
+"$GRADLE_GHOST_HOME/bin/check-for-update"
 "$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" --init-script "$GRADLE_GHOST_HOME/gradle/init.gradle" "$@"
