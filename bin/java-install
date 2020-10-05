@@ -1,0 +1,33 @@
+#! /bin/bash
+
+printf 'No Java installation was found, installing OpenJDK...\n\n'
+
+GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
+RAW_OS_NAME="$(uname -s)"
+
+case "${RAW_OS_NAME}" in
+    Darwin)
+            OS="osx"
+            ;;
+    Linux)
+           OS="linux"
+           ;;
+    *) echo "Unknown operating system: ${RAW_OS_NAME}"
+       exit 1
+esac
+
+curl "https://download.java.net/java/GA/jdk15/779bf45e88a44cbd9ea6621d33e33db1/36/GPL/openjdk-15_$OS-x64_bin.tar.gz" --output '/tmp/openjdk-15_linux-x64_bin.tar.gz'
+
+printf '\n'
+printf 'Extracting the archive...\n'
+tar xzf '/tmp/openjdk-15_linux-x64_bin.tar.gz' -C "$GRADLE_GHOST_HOME"
+
+printf 'Creating link: /usr/local/bin/java\n'
+ln -s "$GRADLE_GHOST_HOME/jdk-15/bin/java" /usr/local/bin/java
+
+printf 'Cleaning up\n'
+rm '/tmp/openjdk-15_linux-x64_bin.tar.gz'
+
+printf '\n'
+java --version
+printf '\n'

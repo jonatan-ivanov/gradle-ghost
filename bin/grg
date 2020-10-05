@@ -7,5 +7,7 @@ if [ "$1" == '--version' ] || [ "$1" == '-v' ]; then
     echo "Gradle Ghost verion: $GRADLE_GHOST_VERSION"
 fi
 
+[ -n "$JAVA_HOME" ] || which java >/dev/null 2>&1 || "$GRADLE_GHOST_HOME/bin/java-install"
+
 "$GRADLE_GHOST_HOME/bin/check-for-update"
 "$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" --init-script "$GRADLE_GHOST_HOME/gradle/init.gradle" "$@"
