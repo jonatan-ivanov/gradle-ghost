@@ -11,3 +11,11 @@ or via fetch:
 `sh -c "$(fetch -o - https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"`
 
 (On Windows, you need to run your terminal app as admin)
+
+# Testing
+
+You can play with the tool using the `Dockerfile` in the project root:
+```sh
+docker build . -t gradle-ghost
+docker run --rm -it gradle-ghost
+```
