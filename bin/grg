@@ -9,5 +9,11 @@ fi
 
 [ -n "$JAVA_HOME" ] || which java >/dev/null 2>&1 || "$GRADLE_GHOST_HOME/bin/java-install"
 
-"$GRADLE_GHOST_HOME/bin/check-for-update"
+EPOCH_DAYS=$(($(date +%s) / 60 / 60 / 24))
+LAST_UPDATED_FILE_MODIFIED="$(date -r "$GRADLE_GHOST_HOME"/.last-updated +%s 2> /dev/null)"
+LAST_UPDATED_FILE_MODIFIED_EPOCH_DAYS=$((LAST_UPDATED_FILE_MODIFIED / 60 / 60 / 24))
+if [ $((EPOCH_DAYS - LAST_UPDATED_FILE_MODIFIED_EPOCH_DAYS)) -ge 3 ]; then
+    "$GRADLE_GHOST_HOME/bin/check-for-update"
+fi
+
 "$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" --init-script "$GRADLE_GHOST_HOME/gradle/init.gradle" "$@"
