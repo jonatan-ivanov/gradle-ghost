@@ -31,23 +31,27 @@ allprojects {
         withSourcesJar()
     }
 
-    jar.manifest.attributes(
-        'Name': project.name,
-        'Implementation-Build-Date': buildTime,
-        'Implementation-Title': project.name,
-        'Implementation-Version': project.version,
-        'Implementation-Vendor': project.group ?: 'unspecified',
-        'Commit-AbbreviatedId': head?.abbreviatedId ?: 'unspecified',
-        'Commit-Id': head?.id ?: 'unspecified',
-        'Commit-Date': head?.getDate()?.toInstant() ?: 'unspecified',
-        'Source-Path': grgit.remote.list().findResult { it.name == 'origin' ? it.url : null } ?: 'unspecified',
-        'Created-By': "Gradle ${gradle.gradleVersion} with Gradle Ghost (grg)",
-        'Built-By': System.properties['user.name'],
-        'JDK': org.gradle.internal.jvm.Jvm.current(),
-        'OS': org.gradle.internal.os.OperatingSystem.current(),
-        'Class-Path': configurations.runtimeClasspath.collect { it.name }.join(' ')
-    )
-    jar.manifest.writeTo("$buildDir/manifest.mf")
+    jar {
+        doLast {
+            manifest.attributes(
+                'Name': project.name,
+                'Implementation-Build-Date': buildTime,
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': project.group ?: 'unspecified',
+                'Commit-AbbreviatedId': head?.abbreviatedId ?: 'unspecified',
+                'Commit-Id': head?.id ?: 'unspecified',
+                'Commit-Date': head?.getDate()?.toInstant() ?: 'unspecified',
+                'Source-Path': grgit.remote.list().findResult { it.name == 'origin' ? it.url : null } ?: 'unspecified',
+                'Created-By': "Gradle ${gradle.gradleVersion} with Gradle Ghost (grg)",
+                'Built-By': System.properties['user.name'],
+                'JDK': org.gradle.internal.jvm.Jvm.current(),
+                'OS': org.gradle.internal.os.OperatingSystem.current(),
+                'Class-Path': configurations.runtimeClasspath.collect { it.name }.join(' ')
+            )
+            manifest.writeTo("$buildDir/manifest.mf")
+        }
+    }
 
     test {
         useJUnitPlatform()
