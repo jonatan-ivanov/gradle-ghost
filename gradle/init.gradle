@@ -1,8 +1,6 @@
 File ghostsDir = file('ghosts')
 
 settingsEvaluated { settings ->
-    settings.enableFeaturePreview('ONE_LOCKFILE_PER_PROJECT')
-
     if (!gradle.hasProperty('ghost')) {
         gradle.ext.ghost = 'simplified-java'
     }

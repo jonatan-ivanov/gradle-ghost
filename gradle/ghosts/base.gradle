@@ -24,7 +24,7 @@ rootProject {
     ext.head = grgit.head()
     version = head?.abbreviatedId ? "${head.abbreviatedId}.${buildTime.toEpochMilli()}" : "${buildTime.toEpochMilli()}"
 
-    ['.gitignore', '.editorconfig', 'settings.gradle'].each { fileName ->
+    ['.gitignore', '.editorconfig'].each { fileName ->
         if (!file("$rootDir/$fileName").exists()) {
             println "$fileName file does not exsist, creating one..."
             copy {

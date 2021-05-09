@@ -16,4 +16,5 @@ if [ $((EPOCH_DAYS - LAST_UPDATED_FILE_MODIFIED_EPOCH_DAYS)) -ge 3 ]; then
     "$GRADLE_GHOST_HOME/bin/check-for-update"
 fi
 
+[ -e 'settings.gradle' ] || echo "rootProject.name = '$(basename "$PWD")'" > settings.gradle
 "$GRADLE_GHOST_HOME/gradle-wrapper/gradlew" --init-script "$GRADLE_GHOST_HOME/gradle/init.gradle" "$@"
