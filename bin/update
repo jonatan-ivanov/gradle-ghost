@@ -10,7 +10,7 @@ error() {
 }
 
 echo 'Updating Gradle Ghost...'
-if git -C "$GRADLE_GHOST_HOME" pull --rebase --stat origin master
+if git -C "$GRADLE_GHOST_HOME" pull --rebase --stat origin main
 then
     NOW=$(date +%s)
     echo "LAST_UPDATED=$NOW" > "$LAST_UPDATED_FILE"

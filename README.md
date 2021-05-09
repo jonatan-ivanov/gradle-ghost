@@ -27,11 +27,11 @@ It sets-up everything for you to kick-start your project, you only need an empty
 # Installing
 
 You can install Gradle Ghost via curl:  
-`sh -c "$(curl -fsSL https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"`  
+`sh -c "$(curl -fsSL https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"`  
 or via wget:  
-`sh -c "$(wget -qO- https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"`  
+`sh -c "$(wget -qO- https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"`  
 or via fetch:  
-`sh -c "$(fetch -o - https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"`
+`sh -c "$(fetch -o - https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"`
 
 (On Windows, you need to run your terminal app as admin)
 

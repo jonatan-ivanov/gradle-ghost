@@ -1,14 +1,14 @@
 #! /bin/bash
 
 # This script should be run via curl:
-#   sh -c "$(curl -fsSL https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"
+#   sh -c "$(curl -fsSL https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"
 # or via wget:
-#   sh -c "$(wget -qO- https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"
+#   sh -c "$(wget -qO- https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"
 # or via fetch:
-#   sh -c "$(fetch -o - https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install)"
+#   sh -c "$(fetch -o - https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install)"
 #
 # As an alternative, you can first download the install script and run it afterwards:
-#   wget https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/master/bin/install
+#   wget https://raw.githubusercontent.com/jonatan-ivanov/gradle-ghost/main/bin/install
 #   sh install
 #
 # You can tweak the install behavior by setting variables when running the script.
@@ -19,14 +19,14 @@
 #   GRADLE_GHOST_HOME  - path of the installation directory (default: $HOME/.gradle-ghost)
 #   REPO               - name of the GitHub repo to install from (default: jonatan-ivanov/gradle-ghost)
 #   REMOTE             - full remote URL of the git repo to install (default: GitHub via HTTPS)
-#   BRANCH             - branch to check out immediately after install (default: master)
+#   BRANCH             - branch to check out immediately after install (default: main)
 
 set -e
 
 GRADLE_GHOST_HOME=${GRADLE_GHOST_HOME:-~/.gradle-ghost}
 REPO=${REPO:-jonatan-ivanov/gradle-ghost}
 REMOTE=${REMOTE:-https://github.com/${REPO}.git}
-BRANCH=${BRANCH:-master}
+BRANCH=${BRANCH:-main}
 
 RUNNABLE_PATH=bin/grg
 RUNNABLE_LINK=/usr/local/bin/grg
