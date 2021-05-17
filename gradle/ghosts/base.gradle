@@ -5,7 +5,7 @@ gradle.ext.buildTime = new Date().toInstant()
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
